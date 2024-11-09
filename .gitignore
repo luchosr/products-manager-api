@@ -1,5 +1,6 @@
 # Ignore build artifacts
 dist/
+.env
 build/
 node_modules/
 
@@ -11,3 +12,4 @@ secrets.txt
 
 # Ignore temporary files
 *.tmp
+
