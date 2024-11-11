@@ -1,5 +1,6 @@
 import express from 'express';
 import router from './router';
+import colors from 'colors';
 import db from './config/db';
 
 // Connect to DB
@@ -7,18 +8,17 @@ import db from './config/db';
 async function connectDB() {
   try {
     await db.authenticate();
-    console.log('Database connected');
+    db.sync();
+    console.log(colors.green.bold('Database connected'));
   } catch (error) {
     console.log(error);
-    console.log('Error connecting to DB');
+    console.log(colors.red.bold('Error connecting to DB'));
   }
 }
 
 connectDB();
 const server = express();
 
-server.use('/products', router);
-
-//routing
+server.use('/api/products', router);
 
 export default server;
