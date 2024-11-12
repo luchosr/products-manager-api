@@ -55,7 +55,7 @@ export const updateAvailability = async (req: Request, res: Response) => {
     return res.status(404).json({ error: 'Product not found' });
   }
 
-  await product.update(req.body);
+  product.availability = !product.dataValues.availability;
   await product.save();
   res.json({ data: product });
 };
