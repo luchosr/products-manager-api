@@ -1,21 +1,57 @@
 import { Router } from 'express';
-import { createProduct } from './handlers/products';
+import { body, param } from 'express-validator';
+import {
+  createProduct,
+  getProducts,
+  getProductsById,
+  updateAvailability,
+  updateProduct,
+} from './handlers/products';
+import { handleInputErrors } from './middleware';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.json('Desde GET');
-});
+router.get('/', getProducts);
+router.get(
+  '/:id',
+  param('id').isNumeric().withMessage('Id must be numeric'),
+  handleInputErrors,
+  getProductsById
+);
 
-router.post('/', createProduct);
+router.post(
+  '/',
 
-router.put('/', (req, res) => {
-  res.json('Desde PUT');
-});
+  body('name').notEmpty().withMessage('Name is required'),
+  body('price')
+    .isNumeric()
+    .withMessage('Value must be numeric')
+    .notEmpty()
+    .withMessage('Value cannot be empty')
+    .custom((value) => value > 0)
+    .withMessage('Price is not valid'),
+  handleInputErrors,
+  createProduct
+);
 
-router.patch('/', (req, res) => {
-  res.json('Desde PATCH');
-});
+router.put(
+  '/:id',
+  body('name').notEmpty().withMessage('Name is required'),
+  body('price')
+    .isNumeric()
+    .withMessage('Value must be numeric')
+    .notEmpty()
+    .withMessage('Value cannot be empty')
+    .custom((value) => value > 0)
+    .withMessage('Price is not valid'),
+  body('availability')
+    .isBoolean()
+    .withMessage('Availability value is not valid'),
+  handleInputErrors,
+  updateProduct
+);
+
+router.patch('/:id', updateAvailability);
 
 router.delete('/', (req, res) => {
   res.json('Desde DELETE');
