@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { body, param } from 'express-validator';
 import {
   createProduct,
+  deleteProduct,
   getProducts,
   getProductsById,
   updateAvailability,
@@ -36,6 +37,7 @@ router.post(
 
 router.put(
   '/:id',
+  param('id').isNumeric().withMessage('Id must be numeric'),
   body('name').notEmpty().withMessage('Name is required'),
   body('price')
     .isNumeric()
@@ -51,10 +53,18 @@ router.put(
   updateProduct
 );
 
-router.patch('/:id', updateAvailability);
+router.patch(
+  '/:id',
+  param('id').isNumeric().withMessage('Id must be numeric'),
+  handleInputErrors,
+  updateAvailability
+);
 
-router.delete('/', (req, res) => {
-  res.json('Desde DELETE');
-});
+router.delete(
+  '/:id',
+  param('id').isNumeric().withMessage('Id must be numeric'),
+  handleInputErrors,
+  deleteProduct
+);
 
 export default router;
