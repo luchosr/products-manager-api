@@ -1,9 +1,11 @@
-describe('nuestro primer teto', () => {
-  it('uno mas uno = 2', () => {
-    expect(1 + 1).toBe(2);
-  });
+import request from 'supertest';
+import server from '../server';
 
-  it('uno mas uno = 2', () => {
-    expect(1 + 1).not.toBe(3);
+describe('GET /api', () => {
+  it('should send back a JSON response', async () => {
+    const response = await request(server).get('/api');
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toMatch(/json/);
+    expect(response.body.message).toBe('Welcome to the API');
   });
 });
